@@ -1,0 +1,3 @@
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\Source\RIMMSAssemble\obj\Debug\RIMMSAssemble.csprojResolveAssemblyReference.cache
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\Assemblies\RIMMSAssemble.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\Source\RIMMSAssemble\obj\Debug\RIMMSAssemble.dll
