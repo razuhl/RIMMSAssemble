@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq.Expressions;
 using System.Reflection;
 using Verse;
 
@@ -19,8 +20,6 @@ namespace RIMMSAssemble
 	/// </summary>
 	public class RIMMSAssemble : Mod
 	{
-		protected Dictionary<object, Dictionary<string,Assembly>> cachedAssemblies = new Dictionary<object, Dictionary<string, Assembly>>();
-		
 		public RIMMSAssemble(ModContentPack content) : base(content) {
 			//Log.Message("starting rimmsassemble");
 			
@@ -34,16 +33,6 @@ namespace RIMMSAssemble
 			}
 			
 			ResolveEventHandler reh = (object sender, ResolveEventArgs args) => {
-				Dictionary<string, Assembly> dass;
-				Assembly ass;
-				
-				if ( cachedAssemblies.TryGetValue(sender,out dass) ) {
-					if ( dass.TryGetValue(args.Name, out ass) ) {
-						//Log.Message("Custom assembly resolver cache hit: "+sender+" "+args+" "+args.Name);
-						return ass;
-					}
-			    }
-				
 				if ( args.Name.IndexOf(" Version=") < 0 ) return null;
 				
 				//Log.Message("Custom assembly resolver: "+sender+" "+args+" "+args.Name);
@@ -51,16 +40,7 @@ namespace RIMMSAssemble
             	try {
 					AssemblyName an = new AssemblyName(args.Name);
 					an.Version = null;
-					ass = Assembly.Load(an);
-					if ( ass != null ) {
-						if ( !cachedAssemblies.TryGetValue(sender,out dass) ) {
-							dass = new Dictionary<string, Assembly>();
-							cachedAssemblies.Add(sender,dass);
-						}
-						dass.Add(args.Name,ass);
-						//Log.Message("adding to cache");
-					}
-					return ass; 
+					return Assembly.Load(an); 
 				} catch (Exception exception) {
 					Log.Error(exception.Message);
 				}
@@ -82,38 +62,34 @@ namespace RIMMSAssemble
 			MethodInfo miAssemblyIsUsable = typeof(ModAssemblyHandler).GetMethod("AssemblyIsUsable", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 			foreach ( ModContentPack modContentPack in LoadedModManager.RunningMods ) {
 				ModAssemblyHandler ass = modContentPack.assemblies;
-				DirectoryInfo directoryInfo = new DirectoryInfo(modContentPack.AssembliesFolder);
-				if (!directoryInfo.Exists)
-				{
+				Dictionary<string,FileInfo> assFilesInAssemblyFolder = ModContentPack.GetAllFilesForMod(modContentPack,"Assemblies/",s=>s.ToLower() == ".ass");
+				if ( assFilesInAssemblyFolder == null || assFilesInAssemblyFolder.Count == 0 ) {
 					continue;
 				}
-				FileInfo[] files = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories);
-				foreach ( FileInfo fileInfo in files ) {
-					if (fileInfo.Extension.ToLower() == ".ass") {
-						Assembly assembly = null;
-						try {
-							byte[] rawAssembly = File.ReadAllBytes(fileInfo.FullName);
-							string fileName = Path.Combine(fileInfo.DirectoryName, Path.GetFileNameWithoutExtension(fileInfo.FullName)) + ".pdb";
-							FileInfo fileInfo2 = new FileInfo(fileName);
-							if (fileInfo2.Exists) {
-								byte[] rawSymbolStore = File.ReadAllBytes(fileInfo2.FullName);
-								assembly = AppDomain.CurrentDomain.Load(rawAssembly, rawSymbolStore);
-							} else {
-								assembly = AppDomain.CurrentDomain.Load(rawAssembly);
-							}
-						} catch (Exception ex) {
-							Log.Error("Exception loading " + fileInfo.Name + ": " + ex.ToString(), false);
-							break;
+				foreach ( FileInfo fileInfo in assFilesInAssemblyFolder.Values ) {
+					Assembly assembly = null;
+					try {
+						byte[] rawAssembly = File.ReadAllBytes(fileInfo.FullName);
+						string fileName = Path.Combine(fileInfo.DirectoryName, Path.GetFileNameWithoutExtension(fileInfo.FullName)) + ".pdb";
+						FileInfo fileInfo2 = new FileInfo(fileName);
+						if (fileInfo2.Exists) {
+							byte[] rawSymbolStore = File.ReadAllBytes(fileInfo2.FullName);
+							assembly = AppDomain.CurrentDomain.Load(rawAssembly, rawSymbolStore);
+						} else {
+							assembly = AppDomain.CurrentDomain.Load(rawAssembly);
 						}
-						Log.Message("testing assembly: "+assembly+" "+ass.loadedAssemblies.Contains(assembly));
-						if ( assembly != null && !ass.loadedAssemblies.Contains(assembly) ) {
-							if ( (bool)miAssemblyIsUsable.Invoke(ass, new Object[]{assembly}) ) {
-								ass.loadedAssemblies.Add(assembly);
-								loadedAssemblies.Add(assembly,modContentPack);
-								//Log.Message("Loading ass assembly: "+assembly.FullName);
-							} else {
-								Log.Message("Unusable ass assemble: "+assembly.FullName);
-							}
+					} catch (Exception ex) {
+						Log.Error("Exception loading " + fileInfo.Name + ": " + ex.ToString(), false);
+						break;
+					}
+					Log.Message("testing assembly: "+assembly+" "+ass.loadedAssemblies.Contains(assembly));
+					if ( assembly != null && !ass.loadedAssemblies.Contains(assembly) ) {
+						if ( (bool)miAssemblyIsUsable.Invoke(ass, new Object[]{assembly}) ) {
+							ass.loadedAssemblies.Add(assembly);
+							loadedAssemblies.Add(assembly,modContentPack);
+							//Log.Message("Loading ass assembly: "+assembly.FullName);
+						} else {
+							Log.Message("Unusable ass assemble: "+assembly.FullName);
 						}
 					}
 				}

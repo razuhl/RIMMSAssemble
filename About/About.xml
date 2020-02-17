@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-  <name>RIMMSAssemble</name>
-  <author>Malte Schulze</author>
-  <supportedVersions>
-	<li>1.0</li>
-  </supportedVersions>
-  <description>This mod allows other mods to load referenced assemblies even if their version has changed.</description>
+	<name>RIMMSAssemble</name>
+	<author>Malte Schulze</author>
+	<supportedVersions>
+		<li>1.0</li>
+	</supportedVersions>
+	<supportedGameVersions>
+		<li>1.1</li>
+	</supportedGameVersions>
+	<loadBefore>
+		<li>Ludeon.RimWorld</li>
+		<li>UnlimitedHugs.HugsLib</li>
+    </loadBefore>
+	<packageId>MalteSchulze.RIMMSAssemble</packageId>
+	<description>This mod allows other mods to load referenced assemblies even if their version has changed.</description>
 </ModMetaData>
