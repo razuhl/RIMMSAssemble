@@ -79,7 +79,7 @@ namespace RIMMSAssemble
 							assembly = AppDomain.CurrentDomain.Load(rawAssembly);
 						}
 					} catch (Exception ex) {
-						Log.Error("Exception loading " + fileInfo.Name + ": " + ex.ToString(), false);
+						Log.Error("Exception loading " + fileInfo.Name + ": " + ex.ToString());
 						break;
 					}
 					Log.Message("testing assembly: "+assembly+" "+ass.loadedAssemblies.Contains(assembly));
@@ -129,7 +129,7 @@ namespace RIMMSAssemble
 							type,
 							": ",
 							ex
-						}), false);
+						}));
 					}
 					finally
 					{

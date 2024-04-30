@@ -1,4 +1,9 @@
-C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\Source\RIMMSAssemble\obj\Debug\RIMMSAssemble.csprojResolveAssemblyReference.cache
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\Assemblies\RIMMSAssemble.dll
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\Source\RIMMSAssemble\obj\Debug\RIMMSAssemble.dll
 C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\1.1\Assemblies\RIMMSAssemble.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\1.2\Assemblies\RIMMSAssemble.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\1.3\Assemblies\RIMMSAssemble.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\Source\RIMMSAssemble\obj\Debug\RIMMSAssemble.csprojAssemblyReference.cache
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\Source\RIMMSAssemble\obj\Debug\RIMMSAssemble.csproj.CoreCompileInputs.cache
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\1.4\Assemblies\RIMMSAssemble.dll
+C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\RIMMSAssemble\1.5\Assemblies\RIMMSAssemble.dll
